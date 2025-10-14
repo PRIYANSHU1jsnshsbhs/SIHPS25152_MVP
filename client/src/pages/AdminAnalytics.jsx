@@ -13,7 +13,7 @@ import ChartErrorBoundary from '../components/ChartErrorBoundary';
 function Loading() { 
   return (
     <div className="flex items-center justify-center h-full">
-      <div className="text-sm text-[#9AA0A6] animate-pulse">Loading...</div>
+      <div className="text-sm text-[#6C757D] animate-pulse">Loading...</div>
     </div>
   );
 }
@@ -36,14 +36,14 @@ export default function AdminAnalytics() {
         <div>
           <h1 className="text-3xl font-bold mb-2" style={{
             fontFamily: 'Poppins, sans-serif',
-            background: 'linear-gradient(135deg, #FF9933 0%, #FFFFFF 50%, #138808 100%)',
+            background: 'linear-gradient(135deg, #FF9933 0%, #138808 100%)',
             WebkitBackgroundClip: 'text',
             WebkitTextFillColor: 'transparent',
             backgroundClip: 'text'
           }}>
             Analytics & Geospatial Intelligence
           </h1>
-          <p className="text-[#9AA0A6] text-sm">Real-time insights and data visualization</p>
+          <p className="text-[#6C757D] text-sm">Real-time insights and data visualization</p>
         </div>
         <button 
           onClick={refresh} 

@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 100" width="300" height="100">
+  <!-- Gradient Definition -->
+  <defs>
+    <linearGradient id="orangeGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#FF6B35;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#FF9933;stop-opacity:1" />
+    </linearGradient>
+    <filter id="shadow">
+      <feDropShadow dx="0" dy="4" stdDeviation="6" flood-opacity="0.3"/>
+    </filter>
+  </defs>
+  
+  <!-- साहाय्य Text in Devanagari -->
+  <text x="150" y="65" 
+        font-family="'Noto Sans Devanagari', 'Mangal', sans-serif" 
+        font-size="56" 
+        font-weight="bold"
+        fill="url(#orangeGradient)"
+        text-anchor="middle"
+        filter="url(#shadow)">
+    साहाय्य
+  </text>
+  
+  <!-- Decorative dots -->
+  <circle cx="60" cy="30" r="3" fill="#FF9933" opacity="0.6"/>
+  <circle cx="90" cy="85" r="2.5" fill="#FF6B35" opacity="0.5"/>
+  <circle cx="240" cy="35" r="3" fill="#FF9933" opacity="0.6"/>
+  <circle cx="270" cy="80" r="2.5" fill="#FF6B35" opacity="0.5"/>
+</svg>

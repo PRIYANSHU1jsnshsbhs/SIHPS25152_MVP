@@ -73,19 +73,80 @@ export const adminActionsLog = async (req, res) => {
 };
 
 export const beneficiariesGeo = async (req, res) => {
-  // Mock GeoJSON using approved users; random coordinates inside India bounding box
+  // Mock GeoJSON using approved users; fixed coordinates for major Indian cities
+  const indianCities = [
+    { name: 'Delhi', coords: [77.2090, 28.6139] },
+    { name: 'Mumbai', coords: [72.8777, 19.0760] },
+    { name: 'Bangalore', coords: [77.5946, 12.9716] },
+    { name: 'Kolkata', coords: [88.3639, 22.5726] },
+    { name: 'Chennai', coords: [80.2707, 13.0827] },
+    { name: 'Hyderabad', coords: [78.4867, 17.3850] },
+    { name: 'Pune', coords: [73.8567, 18.5204] },
+    { name: 'Ahmedabad', coords: [72.5714, 23.0225] },
+    { name: 'Jaipur', coords: [75.7873, 26.9124] },
+    { name: 'Lucknow', coords: [80.9462, 26.8467] },
+    { name: 'Chandigarh', coords: [76.7794, 30.7333] },
+    { name: 'Bhopal', coords: [77.4126, 23.2599] },
+    { name: 'Patna', coords: [85.1376, 25.5941] },
+    { name: 'Indore', coords: [75.8577, 22.7196] },
+    { name: 'Nagpur', coords: [79.0882, 21.1458] },
+    { name: 'Surat', coords: [72.8311, 21.1702] },
+    { name: 'Kochi', coords: [76.2673, 9.9312] },
+    { name: 'Visakhapatnam', coords: [83.2185, 17.6868] }
+  ];
+  
   const approvedUsers = await User.find({ blockchainHash: { $exists: true } }, 'name aiScore');
-  const features = approvedUsers.map(u => ({
-    type: 'Feature',
-    geometry: { type: 'Point', coordinates: [ 68 + Math.random()*25, 8 + Math.random()*25 ] },
-    properties: { name: u.name, score: u.aiScore ?? Math.floor(Math.random()*100), status: 'approved' }
-  }));
-  // Add some pending/rejected mock points
-  for (let i=0;i<10;i++) {
-    features.push({ type: 'Feature', geometry:{ type:'Point', coordinates:[68+Math.random()*25,8+Math.random()*25] }, properties:{ name: 'Pending '+i, score: Math.floor(Math.random()*100), status:'pending' }});
-  }
-  for (let i=0;i<6;i++) {
-    features.push({ type: 'Feature', geometry:{ type:'Point', coordinates:[68+Math.random()*25,8+Math.random()*25] }, properties:{ name: 'Rejected '+i, score: Math.floor(Math.random()*100), status:'rejected' }});
-  }
+  const features = [];
+  
+  // Map approved users to cities in order
+  approvedUsers.forEach((u, i) => {
+    const city = indianCities[i % indianCities.length];
+    features.push({
+      type: 'Feature',
+      geometry: { type: 'Point', coordinates: city.coords },
+      properties: { name: u.name, score: u.aiScore ?? 85, status: 'approved' }
+    });
+  });
+  
+  // Add pending points at specific cities
+  const pendingCities = [
+    indianCities[1],  // Mumbai
+    indianCities[3],  // Kolkata
+    indianCities[5],  // Hyderabad
+    indianCities[7],  // Ahmedabad
+    indianCities[9],  // Lucknow
+    indianCities[11], // Bhopal
+    indianCities[13], // Indore
+    indianCities[15], // Surat
+    indianCities[2],  // Bangalore
+    indianCities[4]   // Chennai
+  ];
+  
+  pendingCities.forEach((city, i) => {
+    features.push({ 
+      type: 'Feature', 
+      geometry: { type:'Point', coordinates: city.coords }, 
+      properties: { name: 'Pending Application ' + (i + 1), score: 70, status:'pending' }
+    });
+  });
+  
+  // Add rejected points at specific cities
+  const rejectedCities = [
+    indianCities[8],  // Jaipur
+    indianCities[10], // Chandigarh
+    indianCities[12], // Patna
+    indianCities[14], // Nagpur
+    indianCities[16], // Kochi
+    indianCities[17]  // Visakhapatnam
+  ];
+  
+  rejectedCities.forEach((city, i) => {
+    features.push({ 
+      type: 'Feature', 
+      geometry: { type:'Point', coordinates: city.coords }, 
+      properties: { name: 'Rejected Application ' + (i + 1), score: 45, status:'rejected' }
+    });
+  });
+  
   res.json({ type:'FeatureCollection', features });
 };

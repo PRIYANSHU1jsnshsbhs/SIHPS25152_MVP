@@ -131,7 +131,26 @@ export default function FileUpload({ onUploaded }) {
               Clear All
             </button>
           </div>
-          <ul className="space-y-2 max-h-40 overflow-auto pr-1 thin-scroll">
+          <ul 
+            className="space-y-2 max-h-40 overflow-auto pr-1"
+            style={{
+              scrollbarWidth: 'none',
+              msOverflowStyle: 'none'
+            }}
+            onMouseEnter={(e) => {
+              const style = document.createElement('style');
+              style.innerHTML = `
+                .hide-scrollbar::-webkit-scrollbar {
+                  display: none;
+                }
+              `;
+              if (!document.getElementById('hide-scrollbar-style')) {
+                style.id = 'hide-scrollbar-style';
+                document.head.appendChild(style);
+              }
+              e.currentTarget.classList.add('hide-scrollbar');
+            }}
+          >
             {files.map((f, i) => (
               <li
                 key={`${f.name}-${f.size}`}

@@ -6,15 +6,24 @@ export default function Home() {
   const user = getCurrentUser();
 
   return (
-    <main className="relative overflow-hidden">
+    <main className="relative overflow-hidden" style={{ background: 'transparent' }}>
       {/* Hero Section */}
       <section className="mx-auto max-w-7xl px-6 pt-20 pb-28 md:pb-32">
         <div className="grid gap-12 md:grid-cols-2 md:items-center">
           <div>
-            <h1 className="text-4xl md:text-5xl font-bold tracking-tight text-gray-900 leading-tight">
-              Access Government Welfare Schemes <span className="text-indigo-600">Effortlessly</span>
+            <h1 
+              className="text-4xl md:text-5xl font-bold tracking-tight leading-tight"
+              style={{
+                fontFamily: 'Poppins, sans-serif',
+                background: 'linear-gradient(135deg, #FF9933 0%, #138808 100%)',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+                backgroundClip: 'text'
+              }}
+            >
+              Access Government Welfare Schemes <span>Effortlessly</span>
             </h1>
-            <p className="mt-6 text-lg text-gray-600 max-w-prose">
+            <p className="mt-6 text-lg max-w-prose" style={{ color: '#6C757D' }}>
               A unified portal for citizens, organizations, and administrators to manage documents,
               verify identities, and apply for welfare schemes securely.
             </p>
@@ -23,13 +32,38 @@ export default function Home() {
                 <>
                   <Link
                     to="/register"
-                    className="inline-flex items-center justify-center rounded-md bg-indigo-600 px-6 py-3 text-sm font-semibold text-white shadow hover:bg-indigo-500 focus-visible:outline focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                    className="inline-flex items-center justify-center rounded-xl px-8 py-3 text-sm font-bold shadow-lg transition-all duration-300"
+                    style={{
+                      background: 'linear-gradient(135deg, #FF9933 0%, #FFD700 100%)',
+                      color: '#000',
+                      fontFamily: 'Poppins, sans-serif',
+                      boxShadow: '0 4px 6px rgba(255, 153, 51, 0.3)'
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.transform = 'translateY(-2px)';
+                      e.currentTarget.style.boxShadow = '0 8px 12px rgba(255, 153, 51, 0.4)';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.transform = 'translateY(0)';
+                      e.currentTarget.style.boxShadow = '0 4px 6px rgba(255, 153, 51, 0.3)';
+                    }}
                   >
                     Get Started
                   </Link>
                   <Link
                     to="/login"
-                    className="inline-flex items-center justify-center rounded-md border border-gray-300 bg-white px-6 py-3 text-sm font-semibold text-gray-700 hover:bg-gray-50"
+                    className="inline-flex items-center justify-center rounded-xl px-8 py-3 text-sm font-semibold transition-all duration-300"
+                    style={{
+                      background: 'rgba(255, 153, 51, 0.1)',
+                      color: '#2C3E50',
+                      border: '1px solid rgba(255, 153, 51, 0.3)'
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.background = 'rgba(255, 153, 51, 0.2)';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.background = 'rgba(255, 153, 51, 0.1)';
+                    }}
                   >
                     Sign In
                   </Link>
@@ -38,7 +72,12 @@ export default function Home() {
               {user && (
                 <Link
                   to={user.role === 'admin' ? '/admin' : user.role === 'organization' ? '/org' : '/user'}
-                  className="inline-flex items-center justify-center rounded-md bg-indigo-600 px-6 py-3 text-sm font-semibold text-white shadow hover:bg-indigo-500"
+                  className="inline-flex items-center justify-center rounded-xl px-8 py-3 text-sm font-bold shadow-lg transition-all duration-300"
+                  style={{
+                    background: 'linear-gradient(135deg, #FF9933 0%, #FFD700 100%)',
+                    color: '#000',
+                    fontFamily: 'Poppins, sans-serif'
+                  }}
                 >
                   Go to Dashboard
                 </Link>
@@ -46,8 +85,20 @@ export default function Home() {
             </div>
           </div>
           <div className="relative">
-            <div className="absolute -inset-4 bg-gradient-to-tr from-indigo-100 to-blue-50 rounded-3xl blur-2xl opacity-60" />
-            <div className="relative rounded-2xl border border-indigo-100 bg-white shadow-sm p-6 space-y-4">
+            <div 
+              className="absolute -inset-4 rounded-3xl blur-2xl opacity-30"
+              style={{
+                background: 'linear-gradient(135deg, #FF9933 0%, #138808 100%)'
+              }}
+            />
+            <div 
+              className="relative rounded-2xl shadow-xl p-6 space-y-4"
+              style={{
+                background: 'rgba(255, 255, 255, 0.7)',
+                border: '1px solid rgba(255, 153, 51, 0.2)',
+                backdropFilter: 'blur(10px)'
+              }}
+            >
               <FeatureItem icon="document" title="Unified Documents" desc="Upload once & reuse across multiple schemes." />
               <FeatureItem icon="shield" title="Secure Verification" desc="AI & admin backed identity validation." />
               <FeatureItem icon="bolt" title="Fast Applications" desc="Apply to suitable schemes in a few clicks." />
@@ -58,7 +109,13 @@ export default function Home() {
       </section>
 
       {/* Secondary Section */}
-      <section className="bg-white/60 backdrop-blur-sm border-t border-gray-200">
+      <section 
+        className="border-t"
+        style={{
+          background: 'rgba(255, 153, 51, 0.05)',
+          borderColor: 'rgba(255, 153, 51, 0.2)'
+        }}
+      >
         <div className="mx-auto max-w-7xl px-6 py-16 grid gap-12 md:grid-cols-3">
           <StatCard number="3x" label="Faster onboarding" />
           <StatCard number="99.9%" label="Data availability" />
@@ -86,14 +143,21 @@ function FeatureItem({ icon, title, desc }) {
   };
   return (
     <div className="flex items-start gap-4">
-      <span className="mt-1 flex h-10 w-10 items-center justify-center rounded-lg bg-indigo-50 text-indigo-600 ring-1 ring-indigo-100">
+      <span 
+        className="mt-1 flex h-10 w-10 items-center justify-center rounded-lg"
+        style={{
+          background: 'linear-gradient(135deg, rgba(255, 153, 51, 0.1) 0%, rgba(19, 136, 8, 0.1) 100%)',
+          color: '#FF9933',
+          border: '1px solid rgba(255, 153, 51, 0.3)'
+        }}
+      >
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" className="h-5 w-5">
           {iconMap[icon]}
         </svg>
       </span>
       <div>
-        <h3 className="font-semibold text-gray-900 text-sm">{title}</h3>
-        <p className="mt-1 text-xs text-gray-600 leading-relaxed">{desc}</p>
+        <h3 className="font-semibold text-sm" style={{ color: '#2C3E50' }}>{title}</h3>
+        <p className="mt-1 text-xs leading-relaxed" style={{ color: '#6C757D' }}>{desc}</p>
       </div>
     </div>
   );
@@ -102,8 +166,19 @@ function FeatureItem({ icon, title, desc }) {
 function StatCard({ number, label }) {
   return (
     <div className="text-center">
-      <div className="text-4xl font-bold text-indigo-600 tracking-tight">{number}</div>
-      <div className="mt-2 text-sm font-medium text-gray-700">{label}</div>
+      <div 
+        className="text-4xl font-bold tracking-tight"
+        style={{
+          fontFamily: 'Poppins, sans-serif',
+          background: 'linear-gradient(135deg, #FF9933 0%, #FFD700 100%)',
+          WebkitBackgroundClip: 'text',
+          WebkitTextFillColor: 'transparent',
+          backgroundClip: 'text'
+        }}
+      >
+        {number}
+      </div>
+      <div className="mt-2 text-sm font-medium" style={{ color: '#6C757D' }}>{label}</div>
     </div>
   );
 }

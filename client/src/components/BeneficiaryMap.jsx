@@ -84,7 +84,7 @@ export default function BeneficiaryMap({ geo }) {
   }, [heat, geo]);
 
   return (
-    <div className="h-full relative">
+    <div style={{ width: '100%', height: '300px', position: 'relative' }}>
       <div className="absolute top-2 left-2 z-10 flex gap-2">
         <button 
           onClick={()=>setHeat(h=>!h)} 
@@ -101,7 +101,15 @@ export default function BeneficiaryMap({ geo }) {
           {heat ? '📍 Markers' : '🔥 Heatmap'}
         </button>
       </div>
-      <div ref={containerRef} style={{ width:'100%', height:'100%', borderRadius:12 }} />
+      <div 
+        ref={containerRef} 
+        style={{ 
+          width: '100%', 
+          height: '100%', 
+          borderRadius: '12px',
+          overflow: 'hidden'
+        }} 
+      />
     </div>
   );
 }

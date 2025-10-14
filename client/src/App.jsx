@@ -14,8 +14,8 @@ import OrgDashboard from "./pages/OrgDashboard";
 export default function App(){
   return (
     <div className="min-h-screen" style={{
-      background: 'linear-gradient(135deg, #0F1419 0%, #1A1F2E 100%)',
-      color: '#E8EAED'
+      background: 'linear-gradient(135deg, #FFF8F0 0%, #FFFFFF 100%)',
+      color: '#2C3E50'
     }}>
       <ResizableNavbar />
       <Routes>
