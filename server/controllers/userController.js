@@ -7,7 +7,12 @@ export const submitDetails = async (req, res) => {
   const { aadhaar, pan, address } = req.body;
   const user = await User.findById(req.user._id);
   user.personalDetails = { aadhaar, pan, address };
-  user.documents = req.files?.map(f => f.path) || [];
+  const incoming = req.files?.map(f => f.path) || [];
+  // append new docs, avoid duplicates
+  const existing = user.documents || [];
+  const merged = [...existing];
+  incoming.forEach(p => { if (!merged.includes(p)) merged.push(p); });
+  user.documents = merged;
   const aiResponse = { verified: true }; // simulated
   user.verified = aiResponse.verified;
   await user.save();

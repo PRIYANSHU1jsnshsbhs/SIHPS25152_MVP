@@ -6,6 +6,12 @@ export const getPendingUsers = async (req, res) => {
   res.json(users);
 };
 
+// New: list all users for admin, limited fields
+export const listAllUsers = async (req, res) => {
+  const users = await User.find({}, "name email role verified blockchainHash documents").sort({ createdAt: -1 });
+  res.json(users);
+};
+
 export const approveUser = async (req, res) => {
   const user = await User.findById(req.params.id);
   user.blockchainHash = "HASH_" + user._id + Date.now();
