@@ -110,6 +110,26 @@ export default function UserDashboard() {
     fetchSchemes();
   }, []);
 
+  // Periodically refresh the current user's profile so admin-side approvals show up
+  useEffect(() => {
+    let mounted = true;
+    const refreshUser = async () => {
+      try {
+        const res = await api.get('/auth/me');
+        if (mounted && res.data) {
+          setUser(res.data);
+          localStorage.setItem('user', JSON.stringify(res.data));
+        }
+      } catch (err) {
+        // silently ignore
+      }
+    };
+    // initial fetch
+    refreshUser();
+    const id = setInterval(refreshUser, 10000); // every 10s
+    return () => { mounted = false; clearInterval(id); };
+  }, []);
+
   const fetchSchemes = async () => {
     setLoading(true);
     setError(null);

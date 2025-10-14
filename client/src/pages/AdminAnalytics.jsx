@@ -63,7 +63,7 @@ export default function AdminAnalytics() {
             e.currentTarget.style.boxShadow = '0 4px 6px rgba(255, 153, 51, 0.3)';
           }}
         >
-          🔄 Refresh Data
+          Refresh Data
         </button>
       </div>
       {error && <ErrorMsg e={error} />}

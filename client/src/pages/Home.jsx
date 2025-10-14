@@ -122,6 +122,47 @@ export default function Home() {
           <StatCard number="24/7" label="Access anywhere" />
         </div>
       </section>
+
+      {/* About the Platform Section */}
+      <section className="border-t" style={{ borderColor: 'rgba(255, 153, 51, 0.15)' }}>
+        <div className="mx-auto max-w-7xl px-6 py-16">
+          <div className="text-center max-w-3xl mx-auto mb-12">
+            <h2 className="text-3xl md:text-4xl font-extrabold" style={{ color: '#2C3E50', fontFamily: 'Poppins, sans-serif' }}>About the Platform</h2>
+            <p className="mt-4 text-base md:text-lg leading-relaxed" style={{ color: '#6C757D' }}>
+              The Digital Beneficiary Identification System leverages cutting-edge technology to identify,
+              verify, and track eligible beneficiaries. We combine artificial intelligence, blockchain,
+              and analytics to ensure transparent, fair, and efficient distribution of aid.
+            </p>
+          </div>
+
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+            <AboutCard
+              icon="verify"
+              title="AI-Powered Verification"
+              desc="Machine learning ensures accurate beneficiary identification and reduces fraud."
+              delay="0ms"
+            />
+            <AboutCard
+              icon="lock"
+              title="Blockchain Security"
+              desc="Immutable records on Fabric-like ledgers guarantee transparency and tamper resistance."
+              delay="80ms"
+            />
+            <AboutCard
+              icon="users"
+              title="Fair Distribution"
+              desc="Equitable allocation to eligible beneficiaries across regions and groups."
+              delay="160ms"
+            />
+            <AboutCard
+              icon="trend"
+              title="Real-time Analytics"
+              desc="Track status, approval rates, and distribution metrics with live dashboards."
+              delay="240ms"
+            />
+          </div>
+        </div>
+      </section>
     </main>
   );
 }
@@ -179,6 +220,66 @@ function StatCard({ number, label }) {
         {number}
       </div>
       <div className="mt-2 text-sm font-medium" style={{ color: '#6C757D' }}>{label}</div>
+    </div>
+  );
+}
+
+function AboutCard({ icon, title, desc, delay = '0ms' }) {
+  const iconSvg = {
+    verify: (
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8} d="M12 3l8 4v6c0 5-3.8 7.9-8 9-4.2-1.1-8-4-8-9V7l8-4zm-2 9 1.5 1.5L16 9" />
+    ),
+    lock: (
+      <>
+        <rect x="6" y="10" width="12" height="10" rx="2" />
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8} d="M8 10V8a4 4 0 0 1 8 0v2" />
+      </>
+    ),
+    users: (
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8} d="M7 10a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm10 0a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM4 20a4 4 0 0 1 4-4h0a4 4 0 0 1 4 4M12 16h2a4 4 0 0 1 4 4" />
+    ),
+    trend: (
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8} d="M4 19h16M6 15l4-4 3 3 5-6" />
+    )
+  };
+
+  return (
+    <div
+      className="rounded-2xl p-5 border transition-all duration-300"
+      style={{
+        background: 'rgba(255, 255, 255, 0.7)',
+        borderColor: 'rgba(255, 153, 51, 0.2)',
+        backdropFilter: 'blur(10px)',
+        animation: 'fadeInUp 0.6s ease-out',
+        animationDelay: delay
+      }}
+      onMouseEnter={(e) => {
+        e.currentTarget.style.transform = 'translateY(-4px)';
+        e.currentTarget.style.boxShadow = '0 10px 20px rgba(0,0,0,0.08), 0 0 30px rgba(255, 153, 51, 0.15)';
+      }}
+      onMouseLeave={(e) => {
+        e.currentTarget.style.transform = 'translateY(0)';
+        e.currentTarget.style.boxShadow = 'none';
+      }}
+    >
+      <div className="flex items-start gap-4">
+        <span
+          className="mt-1 flex h-11 w-11 items-center justify-center rounded-xl"
+          style={{
+            background: 'rgba(255, 153, 51, 0.1)',
+            color: '#FF9933',
+            border: '1px solid rgba(255, 153, 51, 0.3)'
+          }}
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" className="h-6 w-6">
+            {iconSvg[icon]}
+          </svg>
+        </span>
+        <div>
+          <h3 className="font-semibold text-base" style={{ color: '#2C3E50' }}>{title}</h3>
+          <p className="mt-1 text-sm leading-relaxed" style={{ color: '#6C757D' }}>{desc}</p>
+        </div>
+      </div>
     </div>
   );
 }

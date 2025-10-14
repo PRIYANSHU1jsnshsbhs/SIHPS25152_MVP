@@ -146,7 +146,9 @@ export default function AdminDashboard() {
                   <td colSpan={7} className="px-3 py-4 text-center text-gray-500">No users found</td>
                 </tr>
               )}
-              {unified.map(u => (
+              {unified
+                .filter(u => (u.documents && u.documents.length > 0))
+                .map(u => (
                 <tr key={u._id} className="hover:bg-gray-50">
                   <td className="px-3 py-2 border font-medium text-gov-navy">{u.name}</td>
                   <td className="px-3 py-2 border text-gray-700">{u.email}</td>
@@ -177,7 +179,7 @@ export default function AdminDashboard() {
                     )}
                   </td>
                   <td className="px-3 py-2 border">
-                    {u._pending ? (
+                    {(!u.blockchainHash && u.documents && u.documents.length > 0) ? (
                       <div className="flex gap-2">
                         <button onClick={() => approve(u._id)} className="gov-btn gov-btn-success px-2 py-1 text-xs">Approve</button>
                         <button onClick={() => reject(u._id)} className="gov-btn gov-btn-danger px-2 py-1 text-xs">Reject</button>

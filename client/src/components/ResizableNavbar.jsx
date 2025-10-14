@@ -51,22 +51,23 @@ export default function ResizableNavbar() {
       }}
     >
       <div
-        className={`mx-auto flex items-center gap-6 transition-all duration-300 ${
+        className={`mx-auto flex items-center transition-all duration-300 ${
           shrink ? "max-w-5xl" : "max-w-6xl"
-        } px-4`}
+        } px-4 relative`}
       >
-        <Link to="/" className="flex items-center shrink-0">
+        <Link to="/" className="flex items-center shrink-0 mr-6">
           <img 
             src="/sahaayya-logo.svg"
             alt="साहाय्य - Welfare System"
             className={`transition-all duration-300 ${shrink ? 'h-10' : 'h-12'}`}
             style={{
-              filter: 'drop-shadow(0 2px 4px rgba(255, 153, 51, 0.2))'
+              filter: 'drop-shadow(0 2px 4px rgba(255, 153, 51, 0.2))',
             }}
           />
         </Link>
-        {/* Desktop nav items */}
-        <ul className="hidden md:flex items-center gap-4 ml-4 text-sm">
+        {/* Nav items: centered when logged in, left-aligned next to logo when logged out */}
+        <div className={`flex-1 flex ${user ? 'justify-center' : 'justify-start'}`}>
+          <ul className={`hidden md:flex items-center gap-5 text-sm ${!user ? 'ml-2' : ''}`}>
           {navItems.map((item) => (
             <li key={item.link}>
               <Link
@@ -102,9 +103,10 @@ export default function ResizableNavbar() {
               </Link>
             </li>
           ))}
-        </ul>
+          </ul>
+        </div>
 
-        <div className="ml-auto hidden md:flex items-center gap-3">
+        <div className="hidden md:flex items-center gap-3">
           {!user ? (
             <>
               <Link
@@ -151,15 +153,15 @@ export default function ResizableNavbar() {
                 onClick={logout}
                 className="px-3 py-1.5 text-sm shadow-sm rounded-md transition-all duration-300"
                 style={{
-                  background: '#E0115F',
-                  color: '#fff',
+                  background: 'linear-gradient(135deg, var(--india-saffron) 0%, var(--accent-gold) 100%)',
+                  color: '#000',
                   fontWeight: '600'
                 }}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.background = '#C00E50';
+                  e.currentTarget.style.background = 'linear-gradient(135deg, #E67300 0%, #FFB300 100%)';
                 }}
                 onMouseLeave={(e) => {
-                  e.currentTarget.style.background = '#E0115F';
+                  e.currentTarget.style.background = 'linear-gradient(135deg, var(--india-saffron) 0%, var(--accent-gold) 100%)';
                 }}
               >
                 Logout
@@ -271,8 +273,9 @@ export default function ResizableNavbar() {
                 onClick={logout}
                 className="w-full text-left px-3 py-2 rounded-md font-medium"
                 style={{
-                  background: '#E0115F',
-                  color: '#fff'
+                  background: 'linear-gradient(135deg, var(--india-saffron) 0%, var(--accent-gold) 100%)',
+                  color: '#000',
+                  fontWeight: '600'
                 }}
               >
                 Logout

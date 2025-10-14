@@ -19,3 +19,10 @@ export const login = async (req, res) => {
 
   res.json({ token: generateToken(user._id), user });
 };
+
+export const me = async (req, res) => {
+  // req.user is set by protect middleware
+  const u = await User.findById(req.user.id).select('name email role verified aiScore blockchainHash documents');
+  if (!u) return res.status(404).json({ message: 'User not found' });
+  res.json(u);
+};
