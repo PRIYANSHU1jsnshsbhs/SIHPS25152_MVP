@@ -2,21 +2,31 @@ import React, { useEffect, useState } from "react";
 import api from "../api/api";
 import FileUpload from "../components/FileUpload";
 import { getCurrentUser } from "../utils/auth";
+import ProfileSummary from "../components/dashboard/ProfileSummary";
+import SchemeCard from "../components/dashboard/SchemeCard";
+import SchemeSkeleton from "../components/dashboard/SchemeSkeleton";
 
 export default function UserDashboard() {
   const [schemes, setSchemes] = useState([]);
   const [user, setUser] = useState(getCurrentUser());
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     fetchSchemes();
   }, []);
 
   const fetchSchemes = async () => {
+    setLoading(true);
+    setError(null);
     try {
       const res = await api.get("/user/schemes");
-      setSchemes(res.data);
+      setSchemes(res.data || []);
     } catch (err) {
       console.error(err);
+      setError(err?.response?.data?.message || "Failed to load schemes");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -32,92 +42,158 @@ export default function UserDashboard() {
   };
 
   return (
-    <div className="min-h-[70vh] max-w-6xl mx-auto p-6 space-y-6">
-      <header className="flex items-center justify-between">
-        <div>
-          <h2 className="text-3xl font-bold text-black">User Dashboard</h2>
-          <p className="text-sm text-gray-600">
-            Manage your profile, documents and apply for schemes
-          </p>
-        </div>
+    <div className="min-h-[70vh] max-w-7xl mx-auto p-6 md:p-8 space-y-10">
+      <header className="flex flex-col gap-2">
+        <h1 className="text-3xl font-bold tracking-tight text-gray-900 flex items-center gap-3">
+          <span className="inline-flex items-center justify-center w-11 h-11 rounded-xl bg-indigo-100 text-indigo-600">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-6 w-6"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={1.8}
+                d="M3 21h18M4 10.5 12 3l8 7.5M6 21v-8h4v8M14 21v-5h4v5"
+              />
+            </svg>
+          </span>
+          User Dashboard
+        </h1>
+        <p className="text-sm text-gray-600">
+          Manage your details and access government schemes effortlessly.
+        </p>
       </header>
 
-      <section className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="lg:col-span-1 bg-white rounded-xl shadow p-5">
-          <h3 className="text-lg font-semibold text-black mb-3">Profile</h3>
-          <div className="space-y-2 text-sm text-gray-700">
-            <p className="text-black">
-              <strong>Name:</strong> {user?.name}
-            </p>
-            <p className="text-black">
-              <strong>Email:</strong> {user?.email}
-            </p>
-            <p className="text-black">
-              <strong>Verified by AI:</strong> {user?.verified ? "Yes" : "No"}
-            </p>
-            <p className="text-black">
-              <strong>Blockchain Hash:</strong>{" "}
-              {user?.blockchainHash || "Not approved by admin yet"}
-            </p>
-          </div>
-        </div>
-
-        <div className="lg:col-span-2 space-y-6">
-          <div className="bg-white rounded-xl shadow p-5">
-            <h3 className="text-lg font-semibold text-black mb-3">
-              Upload documents & personal details
-            </h3>
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        {/* Left column: Upload card */}
+        <div className="lg:col-span-1 order-2 lg:order-none space-y-8">
+          <section
+            aria-labelledby="upload-heading"
+            className="rounded-2xl bg-white shadow-sm ring-1 ring-black/5 p-6"
+          >
+            <h2
+              id="upload-heading"
+              className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2"
+            >
+              <span className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-indigo-100 text-indigo-600">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-4 w-4"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M12 4v16m8-8H4"
+                  />
+                </svg>
+              </span>
+              Submit Documents
+            </h2>
             <FileUpload
               onUploaded={(u) => {
                 setUser(u);
                 localStorage.setItem("user", JSON.stringify(u));
               }}
             />
-          </div>
+          </section>
 
-          <div className="bg-white rounded-xl shadow p-5">
-            <h3 className="text-lg font-semibold text-black mb-3">
-              Available Schemes
-            </h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {schemes.length === 0 && (
-                <div className="text-gray-500">
-                  No schemes available right now.
-                </div>
-              )}
-              {schemes.map((s) => (
-                <div
-                  key={s._id}
-                  className="border rounded-lg p-4 hover:shadow-md transition"
+        </div>
+        <div className="lg:col-span-2 order-1 lg:order-none">
+          <ProfileSummary user={user} />
+        </div>
+        {/* Schemes full-width row */}
+        <div className="lg:col-span-3 order-3">
+          <section
+            aria-labelledby="schemes-heading"
+            className="rounded-2xl bg-white shadow-sm ring-1 ring-black/5 p-6"
+          >
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+              <h2
+                id="schemes-heading"
+                className="text-lg font-semibold text-gray-900 flex items-center gap-2"
+              >
+                <span className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-indigo-100 text-indigo-600">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-4 w-4"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M3 7h18M3 12h18M3 17h18"
+                    />
+                  </svg>
+                </span>
+                Available Schemes
+                <span className="ml-2 text-xs font-medium text-indigo-600 bg-indigo-50 border border-indigo-100 px-2 py-0.5 rounded-full">
+                  {schemes.length}
+                </span>
+              </h2>
+              <div className="flex items-center gap-3">
+                <button
+                  onClick={fetchSchemes}
+                  disabled={loading}
+                  className="text-xs font-medium rounded-md border border-gray-300 bg-white px-3 py-2 text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 disabled:opacity-50"
                 >
-                  <div className="flex items-start justify-between gap-4">
-                    <div>
-                      <h4 className="text-black font-semibold">{s.name}</h4>
-                      <p className="text-sm text-gray-700 mt-1">
-                        {s.description}
-                      </p>
-                      <p className="text-xs text-gray-500 mt-2">
-                        Eligibility: {s.eligibility}
-                      </p>
-                    </div>
-                    <div className="flex flex-col items-end gap-2">
-                      <button
-                        onClick={() => handleApply(s._id)}
-                        className="px-4 py-2 rounded-md bg-gradient-to-r from-indigo-600 to-blue-500 text-white font-medium"
-                      >
-                        Apply
-                      </button>
-                      <div className="text-xs text-gray-400">
-                        Fee: {s.fee ? `₹${s.fee}` : "Free"}
-                      </div>
-                    </div>
-                  </div>
-                </div>
+                  {loading ? "Refreshing..." : "Refresh"}
+                </button>
+              </div>
+            </div>
+            {error && (
+              <div className="mb-6 text-sm rounded-md bg-red-50 text-red-700 border border-red-200 px-3 py-2">
+                {error}
+              </div>
+            )}
+            <div className="grid gap-6 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4">
+              {loading && !schemes.length && (
+                <>
+                  {Array.from({ length: 8 }).map((_, i) => (
+                    <SchemeSkeleton key={i} />
+                  ))}
+                </>
+              )}
+              {!loading && schemes.length === 0 && (
+                <p className="text-sm text-gray-500 col-span-full">
+                  No schemes available right now.
+                </p>
+              )}
+              {[...schemes, ...(!loading ? sampleExtraSchemes : [])].map((s) => (
+                <SchemeCard key={s._id} scheme={s} onApply={handleApply} />
               ))}
             </div>
-          </div>
+          </section>
         </div>
-      </section>
+      </div>
     </div>
   );
 }
+
+// Additional placeholder schemes for visual fullness (client-side only)
+const sampleExtraSchemes = [
+  {
+    _id: "demo-1",
+    name: "Rural Upliftment",
+    description: "Support for small farmers adopting sustainable practices.",
+    eligibility: "Small / marginal farmers",
+    fee: 0,
+  },
+  {
+    _id: "demo-2",
+    name: "Women Entrepreneurship",
+    description: "Seed funding & mentorship for women-led startups.",
+    eligibility: "Women founders",
+    fee: 0,
+  },
+];

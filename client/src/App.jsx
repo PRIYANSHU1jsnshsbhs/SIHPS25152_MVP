@@ -6,6 +6,7 @@ import RequireAuth from "./components/RequireAuth";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import UserDashboard from "./pages/UserDashboard";
+import Home from "./pages/Home";
 import AdminDashboard from "./pages/AdminDashboard";
 import OrgDashboard from "./pages/OrgDashboard";
 
@@ -14,7 +15,7 @@ export default function App(){
     <div className="min-h-screen bg-gray-50">
       <Navbar />
       <Routes>
-        <Route path="/" element={<HomeRedirect />} />
+  <Route path="/" element={<Home />} />
 
         <Route path="/login" element={<Login/>} />
         <Route path="/register" element={<Register/>} />
@@ -40,11 +41,4 @@ export default function App(){
   );
 }
 
-function HomeRedirect(){
-  // choose redirect by role
-  const user = localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")) : null;
-  if (!user) return <Navigate to="/login" replace />;
-  if (user.role === "admin") return <Navigate to="/admin" replace />;
-  if (user.role === "organization") return <Navigate to="/org" replace />;
-  return <Navigate to="/user" replace />;
-}
+// HomeRedirect no longer needed (we now show landing page)

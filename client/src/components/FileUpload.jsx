@@ -5,6 +5,8 @@ export default function FileUpload({ onUploaded }) {
   const [files, setFiles] = useState([]);
   const [loading, setLoading] = useState(false);
   const [dragOver, setDragOver] = useState(false);
+  const [progress, setProgress] = useState(0);
+  const [message, setMessage] = useState(null); // success / error text
   const inputRef = useRef(null);
 
   const addFiles = (newFiles) => {
@@ -33,27 +35,37 @@ export default function FileUpload({ onUploaded }) {
   };
 
   const upload = async () => {
-    if (!files.length) return alert("Choose files first");
+    if (!files.length) return setMessage({ type: "error", text: "Select files first." });
     const fd = new FormData();
     files.forEach((f) => fd.append("documents", f));
     setLoading(true);
+    setProgress(10);
+    setMessage(null);
     try {
       const res = await api.post("/user/submit", fd, {
         headers: { "Content-Type": "multipart/form-data" },
+        onUploadProgress: (evt) => {
+          if (evt.total) {
+            const pct = Math.round((evt.loaded / evt.total) * 100);
+            setProgress(pct);
+          }
+        },
       });
       onUploaded?.(res.data.user);
-      alert("Uploaded & submitted!");
+      setMessage({ type: "success", text: "Documents submitted successfully." });
       setFiles([]);
+      setProgress(100);
     } catch (err) {
       console.error(err);
-      alert(err?.response?.data?.message || "Upload failed");
+      setMessage({ type: "error", text: err?.response?.data?.message || "Upload failed" });
     } finally {
       setLoading(false);
+      setTimeout(() => setProgress(0), 800);
     }
   };
 
   return (
-    <div className="space-y-3">
+    <div className="space-y-4" aria-live="polite">
       <div
         onDrop={onDrop}
         onDragOver={(e) => {
@@ -62,7 +74,7 @@ export default function FileUpload({ onUploaded }) {
         }}
         onDragLeave={() => setDragOver(false)}
         onClick={() => inputRef.current?.click()}
-        className={`w-full border-2 border-dashed rounded-lg p-6 flex flex-col items-center justify-center cursor-pointer transition ${
+        className={`w-full border-2 border-dashed rounded-lg p-6 h-56 md:h-60 flex flex-col items-center justify-center cursor-pointer transition ${
           dragOver
             ? "border-indigo-400 bg-indigo-50"
             : "border-gray-200 bg-white"
@@ -89,44 +101,59 @@ export default function FileUpload({ onUploaded }) {
             d="M7 16V4m0 0L3 8m4-4 4 4M17 8v12m0 0l4-4m-4 4-4-4"
           />
         </svg>
-        <div className="text-sm text-gray-600">
-          Drag & drop documents here, or click to select
+        <div className="text-sm text-gray-600 font-medium text-center">
+          Drag & drop documents<br className="hidden sm:block" /> or{" "}
+          <span className="text-indigo-600 underline">browse</span>
         </div>
         <div className="text-xs text-gray-400 mt-1">
           Accepted: PDF, JPG, PNG (multiple files allowed)
         </div>
       </div>
 
+      {progress > 0 && (
+        <div className="w-full h-2 rounded-full bg-gray-100 overflow-hidden">
+          <div
+            className="h-full bg-gradient-to-r from-indigo-600 to-blue-500 transition-all"
+            style={{ width: `${progress}%` }}
+          />
+        </div>
+      )}
+
       {files.length > 0 && (
         <div className="space-y-2">
-          <div className="text-sm font-medium">Files ({files.length})</div>
-          <ul className="space-y-2">
+          <div className="text-sm font-medium flex items-center justify-between">
+            <span>Files ({files.length})</span>
+            <button
+              type="button"
+              onClick={() => setFiles([])}
+              className="text-[11px] text-gray-500 hover:text-gray-700 underline"
+            >
+              Clear All
+            </button>
+          </div>
+          <ul className="space-y-2 max-h-40 overflow-auto pr-1 thin-scroll">
             {files.map((f, i) => (
               <li
                 key={`${f.name}-${f.size}`}
-                className="flex items-center justify-between bg-white p-2 rounded-md border"
+                className="flex items-center gap-3 bg-white p-2 rounded-md border text-xs sm:text-[13px]"
               >
-                <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 flex items-center justify-center rounded bg-gray-100 text-gray-600 text-xs">
-                    {f.name.split(".").pop().toUpperCase()}
+                <div className="w-8 h-8 flex-shrink-0 flex items-center justify-center rounded bg-gray-100 text-gray-600 text-[10px] font-medium">
+                  {f.name.split(".").pop().toUpperCase()}
+                </div>
+                <div className="flex-1 min-w-0">
+                  <div className="font-medium text-gray-800 truncate" title={f.name}>
+                    {f.name}
                   </div>
-                  <div>
-                    <div className="text-sm font-medium text-gray-800">
-                      {f.name}
-                    </div>
-                    <div className="text-xs text-gray-500">
-                      {(f.size / 1024).toFixed(1)} KB
-                    </div>
+                  <div className="text-[10px] text-gray-500">
+                    {(f.size / 1024).toFixed(1)} KB
                   </div>
                 </div>
-                <div className="flex items-center gap-2">
-                  <button
-                    onClick={() => removeFile(i)}
-                    className="text-red-500 text-sm hover:underline"
-                  >
-                    Remove
-                  </button>
-                </div>
+                <button
+                  onClick={() => removeFile(i)}
+                  className="text-red-500 hover:underline flex-shrink-0"
+                >
+                  Remove
+                </button>
               </li>
             ))}
           </ul>
@@ -140,7 +167,7 @@ export default function FileUpload({ onUploaded }) {
           className={`px-4 py-2 rounded-md text-white font-medium ${
             files.length === 0
               ? "bg-gray-300 cursor-not-allowed"
-              : "bg-gradient-to-r from-green-600 to-emerald-500"
+              : "bg-indigo-600 hover:bg-indigo-500"
           }`}
         >
           {loading ? (
@@ -165,10 +192,10 @@ export default function FileUpload({ onUploaded }) {
                   d="M4 12a8 8 0 018-8v8z"
                 ></path>
               </svg>
-              Uploading...
+              Submitting...
             </span>
           ) : (
-            "Upload & Submit"
+            "Submit Documents"
           )}
         </button>
         <button
@@ -179,6 +206,18 @@ export default function FileUpload({ onUploaded }) {
           Clear
         </button>
       </div>
+
+      {message && (
+        <div
+          className={`text-sm rounded-md px-3 py-2 border flex items-start gap-2 ${
+            message.type === "success"
+              ? "bg-green-50 text-green-700 border-green-200"
+              : "bg-red-50 text-red-700 border-red-200"
+          }`}
+        >
+          {message.text}
+        </div>
+      )}
     </div>
   );
 }
