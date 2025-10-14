@@ -2,13 +2,13 @@ import User from "../models/User.js";
 import Scheme from "../models/Scheme.js";
 
 export const getPendingUsers = async (req, res) => {
-  const users = await User.find({ verified: true, blockchainHash: { $exists: false } });
+  const users = await User.find({ verified: true, blockchainHash: { $exists: false } }, "name email role verified aiScore blockchainHash documents");
   res.json(users);
 };
 
 // New: list all users for admin, limited fields
 export const listAllUsers = async (req, res) => {
-  const users = await User.find({}, "name email role verified blockchainHash documents").sort({ createdAt: -1 });
+  const users = await User.find({}, "name email role verified aiScore blockchainHash documents").sort({ createdAt: -1 });
   res.json(users);
 };
 

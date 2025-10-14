@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useMemo } from "react";
+import ScoreGauge from "../components/ScoreGauge";
 import api from "../api/api";
 
 export default function AdminDashboard() {
@@ -80,7 +81,18 @@ export default function AdminDashboard() {
         seen.add(u._id);
       }
     });
-    return rows;
+    // Mock scores locally (0-100 scale) ignoring backend
+    return rows.map((u, idx) => {
+      // Deterministic pseudo-random 0-100 based on index & doc count
+      const docFactor = Math.min((u.documents?.length || 0) * 8, 30); // up to +30
+      const base = (idx * 17) % 70; // 0-69 spread
+      let mock = base + docFactor;
+      // Ensure distribution covers full range
+      if (idx % 11 === 0) mock = Math.min(95, mock + 25);
+      if (idx % 7 === 0) mock = Math.max(5, mock - 10);
+      mock = Math.round(mock); // integer score
+      return { ...u, aiScore: mock };
+    });
   }, [pending, users]);
 
   return (
@@ -117,7 +129,7 @@ export default function AdminDashboard() {
                 <th className="text-left font-medium px-3 py-2 border">Name</th>
                 <th className="text-left font-medium px-3 py-2 border">Email</th>
                 <th className="text-left font-medium px-3 py-2 border">Role</th>
-                <th className="text-left font-medium px-3 py-2 border">AI Verified</th>
+                <th className="text-left font-medium px-3 py-2 border">AI Score</th>
                 <th className="text-left font-medium px-3 py-2 border">Admin Status</th>
                 <th className="text-left font-medium px-3 py-2 border">Docs</th>
                 <th className="text-left font-medium px-3 py-2 border">Actions</th>
@@ -140,11 +152,9 @@ export default function AdminDashboard() {
                   <td className="px-3 py-2 border text-gray-700">{u.email}</td>
                   <td className="px-3 py-2 border capitalize">{u.role}</td>
                   <td className="px-3 py-2 border">
-                    {u.verified ? (
-                      <span className="inline-flex px-2 py-0.5 rounded-full bg-green-50 text-green-700 text-xs border border-green-200">Yes</span>
-                    ) : (
-                      <span className="inline-flex px-2 py-0.5 rounded-full bg-amber-50 text-amber-700 text-xs border border-amber-200">No</span>
-                    )}
+                    <div className="flex items-center">
+                      <ScoreGauge score={u.aiScore} size={48} />
+                    </div>
                   </td>
                   <td className="px-3 py-2 border">
                     {u.blockchainHash ? (

@@ -12,7 +12,8 @@ const userSchema = new mongoose.Schema({
   },
   documents: [String],
   verified: { type: Boolean, default: false },
+  aiScore: { type: Number, min: 300, max: 900 },
   blockchainHash: String
-});
+}, { timestamps: true });
 
 export default mongoose.model("User", userSchema);
