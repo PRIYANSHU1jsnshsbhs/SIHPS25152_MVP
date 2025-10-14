@@ -117,9 +117,9 @@ export default function AdminDashboard() {
       </header>
       <section className="bg-white rounded-xl shadow p-5">
         <div className="flex items-center justify-between mb-4">
-          <h3 className="text-lg font-semibold text-black">Users & Documents</h3>
+          <h3 className="text-lg font-semibold text-gov-navy">Users & Documents</h3>
           <div className="flex gap-2">
-            <button onClick={fetchUsers} className="text-xs px-3 py-1.5 rounded-md border bg-white hover:bg-gray-50">Refresh</button>
+            <button onClick={fetchUsers} className="gov-btn gov-btn-secondary text-xs px-3 py-1.5">Refresh</button>
           </div>
         </div>
         <div className="overflow-x-auto">
@@ -148,7 +148,7 @@ export default function AdminDashboard() {
               )}
               {unified.map(u => (
                 <tr key={u._id} className="hover:bg-gray-50">
-                  <td className="px-3 py-2 border font-medium text-gray-900">{u.name}</td>
+                  <td className="px-3 py-2 border font-medium text-gov-navy">{u.name}</td>
                   <td className="px-3 py-2 border text-gray-700">{u.email}</td>
                   <td className="px-3 py-2 border capitalize">{u.role}</td>
                   <td className="px-3 py-2 border">
@@ -158,9 +158,9 @@ export default function AdminDashboard() {
                   </td>
                   <td className="px-3 py-2 border">
                     {u.blockchainHash ? (
-                      <span className="inline-flex px-2 py-0.5 rounded-full bg-indigo-50 text-indigo-700 text-xs border border-indigo-200">Approved</span>
+                      <span className="inline-flex px-2 py-0.5 rounded-full gov-chip-success text-xs">Approved</span>
                     ) : (
-                      <span className="inline-flex px-2 py-0.5 rounded-full bg-gray-100 text-gray-600 text-xs border border-gray-300">Awaiting</span>
+                      <span className="inline-flex px-2 py-0.5 rounded-full gov-chip-await text-xs">Awaiting</span>
                     )}
                   </td>
                   <td className="px-3 py-2 border">
@@ -179,8 +179,8 @@ export default function AdminDashboard() {
                   <td className="px-3 py-2 border">
                     {u._pending ? (
                       <div className="flex gap-2">
-                        <button onClick={() => approve(u._id)} className="px-2 py-1 rounded-md bg-indigo-600 text-white text-xs">Approve</button>
-                        <button onClick={() => reject(u._id)} className="px-2 py-1 rounded-md bg-red-500 text-white text-xs">Reject</button>
+                        <button onClick={() => approve(u._id)} className="gov-btn gov-btn-success px-2 py-1 text-xs">Approve</button>
+                        <button onClick={() => reject(u._id)} className="gov-btn gov-btn-danger px-2 py-1 text-xs">Reject</button>
                       </div>
                     ) : (
                       <span className="text-xs text-gray-400">—</span>

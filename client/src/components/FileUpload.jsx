@@ -76,8 +76,8 @@ export default function FileUpload({ onUploaded }) {
         onClick={() => inputRef.current?.click()}
         className={`w-full border-2 border-dashed rounded-lg p-6 h-56 md:h-60 flex flex-col items-center justify-center cursor-pointer transition ${
           dragOver
-            ? "border-indigo-400 bg-indigo-50"
-            : "border-gray-200 bg-white"
+            ? "border-gov-navy bg-gov-gold-soft"
+            : "border-gov-ash bg-white"
         }`}
       >
         <input
@@ -101,9 +101,9 @@ export default function FileUpload({ onUploaded }) {
             d="M7 16V4m0 0L3 8m4-4 4 4M17 8v12m0 0l4-4m-4 4-4-4"
           />
         </svg>
-        <div className="text-sm text-gray-600 font-medium text-center">
+        <div className="text-sm text-gray-700 font-medium text-center">
           Drag & drop documents<br className="hidden sm:block" /> or{" "}
-          <span className="text-indigo-600 underline">browse</span>
+          <span className="text-gov-navy underline">browse</span>
         </div>
         <div className="text-xs text-gray-400 mt-1">
           Accepted: PDF, JPG, PNG (multiple files allowed)
@@ -111,9 +111,9 @@ export default function FileUpload({ onUploaded }) {
       </div>
 
       {progress > 0 && (
-        <div className="w-full h-2 rounded-full bg-gray-100 overflow-hidden">
+        <div className="w-full h-2 rounded-full bg-gov-ash overflow-hidden">
           <div
-            className="h-full bg-gradient-to-r from-indigo-600 to-blue-500 transition-all"
+            className="h-full bg-gov-navy transition-all"
             style={{ width: `${progress}%` }}
           />
         </div>
@@ -135,9 +135,9 @@ export default function FileUpload({ onUploaded }) {
             {files.map((f, i) => (
               <li
                 key={`${f.name}-${f.size}`}
-                className="flex items-center gap-3 bg-white p-2 rounded-md border text-xs sm:text-[13px]"
+                className="flex items-center gap-3 bg-white p-2 rounded-md border border-gov-ash text-xs sm:text-[13px]"
               >
-                <div className="w-8 h-8 flex-shrink-0 flex items-center justify-center rounded bg-gray-100 text-gray-600 text-[10px] font-medium">
+                <div className="w-8 h-8 flex-shrink-0 flex items-center justify-center rounded bg-gov-ash text-gray-600 text-[10px] font-medium">
                   {f.name.split(".").pop().toUpperCase()}
                 </div>
                 <div className="flex-1 min-w-0">
@@ -150,7 +150,7 @@ export default function FileUpload({ onUploaded }) {
                 </div>
                 <button
                   onClick={() => removeFile(i)}
-                  className="text-red-500 hover:underline flex-shrink-0"
+                  className="text-gov-danger hover:underline flex-shrink-0"
                 >
                   Remove
                 </button>
@@ -164,10 +164,10 @@ export default function FileUpload({ onUploaded }) {
         <button
           onClick={upload}
           disabled={loading || files.length === 0}
-          className={`px-4 py-2 rounded-md text-white font-medium ${
+          className={`gov-btn px-4 py-2 font-medium ${
             files.length === 0
-              ? "bg-gray-300 cursor-not-allowed"
-              : "bg-indigo-600 hover:bg-indigo-500"
+              ? "bg-gray-300 cursor-not-allowed text-white"
+              : "gov-btn-primary"
           }`}
         >
           {loading ? (
@@ -201,7 +201,7 @@ export default function FileUpload({ onUploaded }) {
         <button
           onClick={() => setFiles([])}
           disabled={files.length === 0 || loading}
-          className="px-3 py-2 rounded-md border text-sm"
+          className="gov-btn gov-btn-secondary px-3 py-2 text-sm"
         >
           Clear
         </button>
@@ -211,8 +211,8 @@ export default function FileUpload({ onUploaded }) {
         <div
           className={`text-sm rounded-md px-3 py-2 border flex items-start gap-2 ${
             message.type === "success"
-              ? "bg-green-50 text-green-700 border-green-200"
-              : "bg-red-50 text-red-700 border-red-200"
+              ? "bg-gov-success-soft text-gov-success border border-gov-success"
+              : "bg-red-50 text-gov-danger border border-gov-danger/50"
           }`}
         >
           {message.text}

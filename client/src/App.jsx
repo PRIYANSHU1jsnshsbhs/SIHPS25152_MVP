@@ -8,11 +8,15 @@ import Register from "./pages/Register";
 import UserDashboard from "./pages/UserDashboard";
 import Home from "./pages/Home";
 import AdminDashboard from "./pages/AdminDashboard";
+import AdminAnalytics from "./pages/AdminAnalytics";
 import OrgDashboard from "./pages/OrgDashboard";
 
 export default function App(){
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen" style={{
+      background: 'linear-gradient(135deg, #0F1419 0%, #1A1F2E 100%)',
+      color: '#E8EAED'
+    }}>
       <ResizableNavbar />
       <Routes>
   <Route path="/" element={<Home />} />
@@ -28,6 +32,7 @@ export default function App(){
         {/* Admin routes */}
         <Route element={<RequireAuth allowedRoles={['admin']} />}>
           <Route path="/admin" element={<AdminDashboard/>} />
+          <Route path="/admin/analytics" element={<AdminAnalytics/>} />
         </Route>
 
         {/* Organization routes */}

@@ -6,6 +6,7 @@ import authRoutes from "./routes/authRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
 import adminRoutes from "./routes/adminRoutes.js";
 import orgRoutes from "./routes/orgRoutes.js";
+import analyticsRoutes from "./routes/analyticsRoutes.js";
 
 dotenv.config();
 connectDB();
@@ -19,5 +20,6 @@ app.use("/api/auth", authRoutes);
 app.use("/api/user", userRoutes);
 app.use("/api/admin", adminRoutes);
 app.use("/api/org", orgRoutes);
+app.use("/api/analytics", analyticsRoutes);
 
 app.listen(8080, () => console.log("Server running on port 8080"));
