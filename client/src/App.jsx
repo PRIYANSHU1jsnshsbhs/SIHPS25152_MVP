@@ -1,6 +1,6 @@
 import React from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
-import Navbar from "./components/Navbar";
+import ResizableNavbar from "./components/ResizableNavbar";
 import RequireAuth from "./components/RequireAuth";
 
 import Login from "./pages/Login";
@@ -13,7 +13,7 @@ import OrgDashboard from "./pages/OrgDashboard";
 export default function App(){
   return (
     <div className="min-h-screen bg-gray-50">
-      <Navbar />
+      <ResizableNavbar />
       <Routes>
   <Route path="/" element={<Home />} />
 
