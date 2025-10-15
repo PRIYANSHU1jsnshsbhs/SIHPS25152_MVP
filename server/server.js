@@ -13,7 +13,17 @@ connectDB();
 
 const app = express();
 app.use(express.json());
-app.use(cors());
+
+// CORS configuration for production
+const corsOptions = {
+  origin: process.env.NODE_ENV === 'production' 
+    ? process.env.FRONTEND_URL || 'https://your-frontend-app.onrender.com'
+    : 'http://localhost:5173',
+  credentials: true,
+  optionsSuccessStatus: 200
+};
+app.use(cors(corsOptions));
+
 app.use("/uploads", express.static("uploads"));
 
 app.use("/api/auth", authRoutes);
@@ -22,4 +32,5 @@ app.use("/api/admin", adminRoutes);
 app.use("/api/org", orgRoutes);
 app.use("/api/analytics", analyticsRoutes);
 
-app.listen(8080, () => console.log("Server running on port 8080"));
+const PORT = process.env.PORT || 8080;
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
