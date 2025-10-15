@@ -14,11 +14,30 @@ connectDB();
 const app = express();
 app.use(express.json());
 
-// CORS configuration for production
+// CORS configuration for production and development
+const allowedOrigins = [
+  'http://localhost:5173',
+  'http://localhost:3000',
+  'http://localhost:5174',
+  process.env.FRONTEND_URL
+].filter(Boolean);
+
 const corsOptions = {
-  origin: process.env.NODE_ENV === 'production' 
-    ? process.env.FRONTEND_URL || 'https://your-frontend-app.onrender.com'
-    : 'http://localhost:5173',
+  origin: function (origin, callback) {
+    // Allow requests with no origin (like mobile apps or curl requests)
+    if (!origin) return callback(null, true);
+    
+    if (process.env.NODE_ENV === 'production') {
+      if (allowedOrigins.indexOf(origin) !== -1) {
+        callback(null, true);
+      } else {
+        callback(new Error('Not allowed by CORS'));
+      }
+    } else {
+      // Allow all origins in development
+      callback(null, true);
+    }
+  },
   credentials: true,
   optionsSuccessStatus: 200
 };
