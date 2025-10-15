@@ -1,4 +1,4 @@
-"# 🇮🇳 SIHPS25152_MVP - Government Welfare Scheme Management System
+## 🇮🇳 SIHPS25152_MVP - Government Welfare Scheme Management System
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Node.js](https://img.shields.io/badge/Node.js-18+-green.svg)](https://nodejs.org/)
